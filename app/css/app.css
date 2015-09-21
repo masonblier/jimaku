@@ -1,0 +1,94 @@
+html, body {
+  margin: 0;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic Pro", Meiryo;
+  overflow-y: scroll;
+}
+
+#header {
+  font-size: 2em;
+  margin: 0 auto;
+  background: mintcream;
+  border-bottom: 1px solid #28967d;
+}
+.header-link {
+  color: #28967d;
+  display: block;
+  width: 800px;
+  padding: 2px;
+  margin: 0 auto;
+  text-decoration: none;
+}
+.header-link>small {
+  float:right;
+  margin-top: 9px;
+  font-size: 20px;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  background: url('/spinner.gif');
+}
+
+.arrow-down {
+  width:0;
+  height:0;
+  border-top:5px solid white;
+  border-right:5px solid transparent;
+  border-left:5px solid transparent;
+}
+.arrow-up {
+  width:0;
+  height:0;
+  border-bottom:5px solid white;
+  border-right:5px solid transparent;
+  border-left:5px solid transparent;
+}
+
+#modal {
+  position: fixed;
+  top: 0; bottom: 0;
+  left: 0; right: 0;
+  background: rgba(0,0,0,0.4);
+  text-align: center
+}
+#modal-dialog {
+  display: inline-block;
+  text-align: left;
+  background: white;
+  min-width: 400px;
+  margin-top: 200px;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin: 7px;
+}
+input, textarea {
+  font-size: 16px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+button {
+  padding: 5px 7px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+}
+button:hover {
+  background: #c1fbdb;
+  cursor: pointer;
+}
+.form-error {
+  padding: 2px 7px;
+  font-size: 14px;
+  color: #d05030;
+  border: 1px solid #d05030;
+  border-radius: 4px;
+  margin: 2px 0;
+}

@@ -1,0 +1,51 @@
+.episode-file-form {
+  text-align: center;
+  margin-top: 7px;
+}
+.episode-file-form input[type=file] {
+  margin-left: 8px;
+}
+
+.script-view {
+  margin: 10px 20px;
+}
+
+.episode-script,
+.vocabulary-list {
+  float: left;
+  width: 50%;
+}
+.episode-script {
+  background: #fffff3;
+}
+.vocabulary-list {
+  background: aliceblue;
+  transition: margin-top 0.2s;
+}
+
+.episode-script-box,
+.vocabulary-list-box {
+  font-size: 16px;
+  margin: 10px;
+  min-height: 200px;
+}
+.vocabulary-list-box:focus {
+  outline: none;
+}
+
+.linenum {
+  color: #777;
+}
+
+.open-recent-view {
+  text-align: center;
+  padding: 10px;
+}
+a.recent-link {
+  color: #30c3af;
+  margin-left: 5px;
+  font-size: 13px;
+}
+a.recent-link:hover, a.recent-link:active {
+  color: #30d3cf;
+}

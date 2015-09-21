@@ -1,0 +1,205 @@
+.script-view > h1 {
+  margin: 10px 0;
+  font-size: 1.5em;
+  font-weight: normal;
+  border-bottom: 1px solid #ccc;
+}
+
+.script-line.highlighted {
+  background: #f5f5f5;
+}
+.script-word.highlighted {
+  background: #d0f7eb;
+}
+
+.script-timestamp {
+  display: table-cell;
+  color: #555;
+  /*border-right: 1px solid #999;*/
+  vertical-align: middle;
+  padding: 5px 7px;
+}
+.script-words {
+  display: table-cell;
+  padding: 12px 7px;
+}
+
+.script-word {
+  display: inline-block;
+  /*position: relative;*/
+  cursor: pointer;
+}
+
+.script-word-text {
+  font-size: 24px;
+  line-height: 24px;
+  padding: 0 7px;
+}
+
+.script-word-overlay-reading,
+.script-word-overlay {
+  position: absolute;
+  /*background: #378450;*/
+  /*color: white;*/
+  z-index: 20;
+  padding: 2px 5px;
+  text-align: center;
+  width: 0;
+}
+
+/* word clicked overlay */
+.script-word-info {
+  text-align: left;
+  cursor: pointer;
+}
+.script-word-reading,
+.script-word-meaning,
+.script-word-meaning-select-option {
+  text-align: center;
+  font-size: 12px;
+  line-height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.script-word-reading {
+  background: #f5f5f5;
+  border-radius: 4px 4px 0 0;
+  padding: 2px;
+  padding-top: 8px;
+}
+.script-word-meaning,
+.script-word-meaning-select-option {
+  background: #f5f5f5;
+  color: black;
+  border-radius: 0 0 4px 4px;
+  padding: 4px 2px;
+}
+.script-word-meaning {
+  border-top: 1px solid transparent;
+}
+.script-word-meaning-select-option {
+  border-top: 1px solid #777;
+}
+.script-word-meaning:hover,
+.script-word-meaning-select-option:hover {
+  background: #b0e7cb;
+}
+
+.script-word-info.expanded .script-word-meaning {
+  border-top: 1px solid #777;
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-radius: 0;
+}
+.script-word-info.expanded .script-word-meaning-select-option {
+  border-left: 1px solid #777;
+  border-right: 1px solid #777;
+  border-radius: 0;
+}
+.script-word-info.expanded .script-word-meaning-select-option:last-child {
+  border-bottom: 1px solid #777;
+  border-radius: 0 0 4px 4px;
+}
+
+/* script word select dropdown*/
+.script-word-select {
+  background: #f0f0f0;
+  color: black;
+  border-radius: 4px;
+  text-align: left;
+}
+.script-word-select-word {
+  padding: 0 4px;
+}
+.script-word-select-btn {
+  background: #cccccc;
+  color: black;
+  border-radius: 4px;
+  float: right;
+  padding: 9px 7px;
+  text-decoration: none;
+}
+.script-word-select-btn:hover {
+  background: #c0c0c0;
+  cursor: pointer;
+}
+
+.script-word-select-list-choices {
+  max-height: 120px;
+  overflow-y: auto;
+}
+.script-word-select-list-choices::-webkit-scrollbar {
+  width: 0;
+}
+.script-word-select-list-choice {
+  border-top: 1px solid #777;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  color: black;
+  text-align: left;
+  padding: 2px;
+  background: #ffffff;
+}
+.script-word-select-list-loading {
+  border-top: 1px solid #777;
+  color: black;
+  text-align: center;
+  padding: 2px;
+  background: #ffffff;
+}
+.script-word-select-list-choice:last-child {
+  border-radius: 0 0 4px 4px;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+.script-word-select-list-choice:hover {
+  background: #e0e0e0;
+  cursor: pointer;
+}
+.script-word-select-list-choice-word {
+  font-size: 18px;
+}
+.script-word-select-list-choice-reading {
+  float: right;
+  font-size: 16px;
+  color: #303030;
+  padding-top: 2px;
+}
+.script-word-select-list-choice-meaning {
+  font-size: 12px;
+  color: #505050;
+}
+.script-word-select-list-choice-add {
+  text-align: center;
+  color: #00af81;
+  font-size: 12px;
+  padding: 3px;
+}
+
+/* add word dialog */
+.edit-word-dialog,
+.add-word-dialog {
+  padding: 10px;
+}
+.edit-word-dialog > h1,
+.add-word-dialog > h1 {
+  margin: 0 0;
+  font-size: 1.2em;
+  font-weight: normal;
+  border-bottom: 1px solid #ccc;
+}
+.edit-word-dialog label,
+.add-word-dialog label {
+  display: inline-block;
+  width: 130px;
+}
+.edit-word-dialog input[type=text],
+.add-word-dialog input[type=text] {
+  width: 224px;
+}
+#edit-word-submit,
+#add-word-submit {
+  float: right;
+  margin: 5px 9px;
+}

@@ -1,0 +1,11 @@
+{
+  "name": "jimaku",
+  "dependencies": {
+    "bluebird": "^2",
+    "bcrypt": "^0.8",
+    "express-session": "^1",
+    "mecab-async": "^0.1.0",
+    "express": "^4",
+    "body-parser": "^1"
+  }
+}
