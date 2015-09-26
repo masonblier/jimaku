@@ -47,13 +47,14 @@ ScriptView.prototype.renderScript = function($el, cb){
   }.bind(this));
 
   var lineIdx = 0;
+  _this.$lines = [];
   renderNextLine();
 
   function renderNextLine() {
     // console.log('rendering line '+lineIdx)
     var line = _this.script.lines[lineIdx];
 
-    var $line = $(
+    var $line = _this.$lines[lineIdx] = $(
       '<div class="script-line" data-idx="'+lineIdx+'"></div>');
     $scriptLines.append($line);
 
@@ -156,14 +157,17 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
       var $meaningSelectOption = $('<div class="script-word-meaning-select-option">Edit Word</div>');
       $meaningSelectOption.on('click', function(){
         var editWordView = new EditWordView(word);
-        editWordView.onEditWord = function(newWord){
+        editWordView.onResult = function(newWord, options){
           // TODO determine wordList changes?
-          // this.script.wordList.addWord(word);
+          this.script.wordList.addWord(word, options.dictionary);
           for (var k in newWord) {
             word[k] = newWord[k];
           }
-          this.script.saveDraft();
           this.renderLine($line, line);
+          if (options.replaceAll) {
+            this.replaceAllWords(newWord);
+          }
+          this.script.saveDraft();
         }.bind(this);
         editWordView.render();
 
@@ -274,6 +278,7 @@ ScriptView.prototype.handleSelection = function($line, line, sel){
   } else {
     if (this.sel) {
       this.hideWordOverlay();
+      this.sel = null;
     }
   }
 };
@@ -293,7 +298,6 @@ ScriptView.prototype.hideWordOverlay = function(){
   this.$wordOverlay.hide();
   this.$wordOverlayReading.hide();
   this.$wordSelectList = null;
-  this.sel = null;
 };
 
 ScriptView.prototype.clickWordSelect = function(e){
@@ -320,6 +324,7 @@ ScriptView.prototype.clickWordSelect = function(e){
         $choice.click(function(e){
           var word = choice;
           this.replaceWordInSelection(word);
+          this.script.saveDraft();
           this.hideWordOverlay();
         }.bind(this));
         $wordSelectListChoices.append($choice);
@@ -330,13 +335,17 @@ ScriptView.prototype.clickWordSelect = function(e){
         '<div class="script-word-select-list-choice-add">Add Word</div>'+
       '</div>');
     $choiceAdd.click(function(e){
-      var addWordView = new AddWordView(this.sel);
-      addWordView.onAddWord = function(word){
-        this.script.wordList.addWord(word);
+      var editWordView = new EditWordView(this.sel);
+      editWordView.onResult = function(word, options){
+        this.script.wordList.addWord(word, options.dictionary);
         this.replaceWordInSelection(word);
+        if (options.replaceAll) {
+          this.replaceAllWords(word);
+        }
+        this.script.saveDraft();
       }.bind(this);
 
-      addWordView.render();
+      editWordView.render();
       this.hideWordOverlay();
     }.bind(this));
     this.$wordSelectList.append($choiceAdd);
@@ -347,55 +356,81 @@ ScriptView.prototype.clickWordSelect = function(e){
 };
 
 ScriptView.prototype.replaceWordInSelection = function(word){
+  this.replaceWordInLine(word, this.sel.line, this.sel.pos, this.sel.text);
+  this.renderLine(this.sel.$line, this.sel.line);
+};
+
+ScriptView.prototype.replaceWordInLine = function(word, line, pos, selText){
   var charIdx = 0;
   var firstWordIdx = -1, lastWordIdx = -1;
   var firstWordOffset = -1, lastWordOffset = -1;
   var currentWord;
 
+  var text = selText || word.text;
+
   // find start/end words of selection
-  for (var idx = 0; idx < this.sel.line.words.length; ++idx) {
-    currentWord = this.sel.line.words[idx];
+  for (var idx = 0; idx < line.words.length; ++idx) {
+    currentWord = line.words[idx];
     if (firstWordIdx === -1) {
-      if (currentWord.text.length + charIdx > this.sel.pos) {
+      if (currentWord.text.length + charIdx > pos) {
         firstWordIdx = idx;
-        firstWordOffset = this.sel.pos - charIdx;
+        firstWordOffset = pos - charIdx;
       }
     }
     if (lastWordIdx === -1) {
-      if ((currentWord.text.length + charIdx) > (this.sel.pos + this.sel.text.length)) {
+      if ((currentWord.text.length + charIdx) > (pos + text.length)) {
         lastWordIdx = idx;
-        lastWordOffset = (this.sel.pos + this.sel.text.length) - charIdx;
+        lastWordOffset = (pos + text.length) - charIdx;
       }
     }
     charIdx += currentWord.text.length;
   }
   if (firstWordIdx === -1) {
-    throw new Error("could not match selection ("+this.sel.text+") in line ("+line.text+")")
+    throw new Error("could not replace word ("+text+") in line ("+line.text+")")
   }
   // console.log("("+firstWordIdx+","+firstWordOffset+") ("+lastWordIdx+","+lastWordOffset+")");
 
   // replace line words
   var deleteCount = (lastWordIdx > -1 ?
                       (lastWordIdx == firstWordIdx ?
-                        1 : lastWordIdx-firstWordIdx) :
-                      this.sel.line.words.length - firstWordIdx);
+                        1 : (lastWordOffset > 0 ? 1 : 0)+(lastWordIdx-firstWordIdx)) :
+                      line.words.length - firstWordIdx);
   var spliceArgs = [firstWordIdx, deleteCount];
   if (firstWordOffset > 0) {
     spliceArgs.push({
-      text: this.sel.line.words[firstWordIdx].text.slice(0, firstWordOffset)
+      text: line.words[firstWordIdx].text.slice(0, firstWordOffset)
     });
   }
   spliceArgs.push(word);
   if (lastWordOffset > 0) {
     spliceArgs.push({
-      text: this.sel.line.words[lastWordIdx].text.slice(lastWordOffset)
+      text: line.words[lastWordIdx].text.slice(lastWordOffset)
     });
   }
-  Array.prototype.splice.apply(this.sel.line.words, spliceArgs);
-  this.script.saveDraft();
+  Array.prototype.splice.apply(line.words, spliceArgs);
 
-  // rerender line
-  this.renderLine(this.sel.$line, this.sel.line);
+  line.text = line.words.map(function(word){return word.text;}).join("");
+};
+
+ScriptView.prototype.replaceAllWords = function(word){
+  console.log('replacing all', word)
+  for (var lineIdx = 0; lineIdx < this.script.lines.length; ++lineIdx) {
+    var line = this.script.lines[lineIdx];
+    if (line.text.indexOf(word.text) > -1) {
+      var modified = false;
+      var pos = 0;
+      while (pos < line.text.length) {
+        pos = line.text.substr(pos).indexOf(word.text);
+        if (pos === -1) break;
+        this.replaceWordInLine(word, line, pos);
+        modified = true;
+        pos += 1;
+      }
+      if (modified) {
+        this.renderLine(this.$lines[lineIdx], line);
+      }
+    }
+  }
 };
 
 ScriptView.prototype.getTextWidth = function(text, cssClass){

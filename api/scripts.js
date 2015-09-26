@@ -11,10 +11,10 @@ var scripts = module.exports = express.Router();
 var SCRIPTS_PATH = path.join(__dirname, '../data/scripts');
 var DATA_CACHE_PATH = path.join(__dirname, '../data/scripts_data');
 
-scripts.get('/scripts/:scriptDir/:scriptName', function (req, res) {
+scripts.get('/scripts/:scriptName', function (req, res) {
 
-  var scriptDir = req.params['scriptDir'].replace(/[^a-zA-Z0-9-_]/gm,"");
-  var scriptName = req.params['scriptName'].replace(/[^a-zA-Z0-9-_]/gm,"");
+  var scriptName = req.params['scriptName'].replace(/[^a-zA-Z0-9-_ ]/gm,"");
+  var scriptDir = scriptName.split(' - ')[0];
   console.log(scriptDir+'/'+scriptName);
 
   var scriptCachePath = path.join(DATA_CACHE_PATH, scriptDir, scriptName+'.json');
@@ -30,7 +30,7 @@ scripts.get('/scripts/:scriptDir/:scriptName', function (req, res) {
   var raw = fs.readFileSync(scriptPath, {encoding:"utf8"});
 
   var script = {
-    title: 'Non Non Biyori 01',
+    title: scriptName,
     lines: []
   };
 

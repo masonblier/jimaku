@@ -4,7 +4,7 @@ function EditWordView(word){
 
 EditWordView.prototype.render = function(){
   var $dialog = $('<div class="edit-word-dialog">'+
-      '<h1>Edit Word</h1>'+
+      '<h1>Add / Edit Word</h1>'+
       '<form>'+
         '<div class="form-error" style="display:none;">Word and Meaning are required.</div>'+
         '<div class="form-group">'+
@@ -23,19 +23,15 @@ EditWordView.prototype.render = function(){
           '<label for="word-meaning">Meaning</label>'+
           '<input type="text" id="word-meaning">'+
         '</div>'+
-        // '<div class="form-group">'+
-        //   '<label for="word-pos">Part of Speech</label>'+
-        //   '<select id="word-pos">'+
-        //     '<option value=""></option>'+
-        //     '<option value="noun">Noun</option>'+
-        //     '<option value="verb-godan">Godan Verb</option>'+
-        //     '<option value="verb-ichidan">Ichidan Verb</option>'+
-        //     '<option value="adjective-i">い-adjective</option>'+
-        //     '<option value="adjective-na">な-adjective</option>'+
-        //     '<option value="adjective-no">の-adjective</option>'+
-        //     '<option value="name">Name</option>'+
-        //   '</select>'+
-        // '</div>'+
+        '<div class="form-group">'+
+          '<label for="word-class">Class / Type</label>'+
+          '<select id="word-class">'+
+            '<option value=""></option>'+
+            '<option value="word">Word</option>'+
+            '<option value="slang">Slang</option>'+
+            '<option value="Name">Name</option>'+
+          '</select>'+
+        '</div>'+
         '<div class="form-group">'+
           '<label for="word-dictionary">Context</label>'+
           '<select id="word-dictionary">'+
@@ -45,10 +41,10 @@ EditWordView.prototype.render = function(){
           '</select>'+
         '</div>'+
         '<div class="form-group">'+
-          // '<label for="word-replace-all">'+
-          //   '<input type="checkbox" id="word-replace-all">'+
-          // 'Replace all</label>'+
-          '<button id="edit-word-submit">Edit Word</button>'+
+          '<label for="word-replace-all">'+
+            '<input type="checkbox" id="word-replace-all">'+
+          'Replace all</label>'+
+          '<button id="edit-word-submit">Save</button>'+
         '</div>'+
       '</form>'+
     '</div>');
@@ -63,7 +59,8 @@ EditWordView.prototype.render = function(){
       reading: $dialog.find("#word-reading").val()||null,
       original: $dialog.find("#word-original").val()||null,
       meaning: $dialog.find("#word-meaning").val()||null,
-      // pos: $dialog.find("#word-pos").val()||null,
+      meanings: (this.word ? this.word.meanings : null),
+      'class': $dialog.find("#word-class").val()||null,
     };
 
     if (!word.text || !word.meaning) {
@@ -72,12 +69,23 @@ EditWordView.prototype.render = function(){
     }
 
     var targetDictionary = $dialog.find("#word-dictionary").val()||null;
+    var replaceAll = !!$dialog.find("#word-replace-all").prop("checked");
 
     if (word.reading===word.text) {
       word.reading = null;
     }
 
-    if (this.onEditWord) this.onEditWord(word);//, replaceAll, targetDictionary);
+    if (word.meanings) {
+      var exists = false;
+      word.meanings.forEach(function(wm){
+        if (wm === word.meaning) exists = true;
+      });
+      if (!exists) {
+        word.meanings.splice(0, 0, word.meaning);
+      }
+    }
+
+    if (this.onResult) this.onResult(word, {replaceAll:replaceAll, dictionary:targetDictionary});
 
     editWordModal.hide();
   }.bind(this));
@@ -87,6 +95,7 @@ EditWordView.prototype.render = function(){
     $dialog.find("#word-reading").val(this.word.reading);
     $dialog.find("#word-original").val(this.word.original);
     $dialog.find("#word-meaning").val(this.word.meaning);
+    $dialog.find("#word-class").val(this.word['class']);
   }
   editWordModal.show();
 };

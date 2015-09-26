@@ -22,6 +22,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // route modules
 app.use('/api', require('./api'));
 
+// catch all to index
+app.use(function(req,res,next){
+  if (/^\/cs|\/js/.test(req.url)) {
+    next();
+  } else {
+    // console.log('->', req.url, __dirname + '/app/index.html')
+    res.sendFile(__dirname + '/app/index.html');
+  }
+});
+
 // Listen
 // listen
 var server = app.listen(8486, function () {

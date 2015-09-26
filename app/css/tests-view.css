@@ -1,0 +1,31 @@
+/* tests view */
+.tests-view {
+  position: relative;
+  /*margin: 10px 20px;*/
+  margin: 10px auto;
+  width: 700px;
+}
+.tests-view > h1 {
+  margin: 10px 0;
+  font-size: 1.5em;
+  font-weight: normal;
+  border-bottom: 1px solid #ccc;
+}
+.tests-category {
+  margin-left: 10px;
+}
+.tests-category > h2 {
+  margin: 10px 0;
+  font-size: 1.2em;
+  font-weight: normal;
+  border-bottom: 1px solid #ccc;
+}
+.tests-test {
+  padding: 5px 10px;
+}
+.tests-test > .result {
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  margin-right: 5px;
+}

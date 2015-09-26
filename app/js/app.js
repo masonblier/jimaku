@@ -22,6 +22,10 @@ App.router.on("/", function(){
   App.setCurrentView(new HomeView());
 });
 
+App.router.on("/tests", function(){
+  App.setCurrentView(new TestsView());
+});
+
 App.router.on("/ev", function(){
   App.setCurrentView(new EvToolView());
 });

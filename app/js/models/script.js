@@ -5,16 +5,29 @@ function Script(name) {
 Script.dataKeys = ['title', 'lines'];
 
 Script.prototype.load = function(success, fail){
-  $.get('/api/scripts/'+this.name).then(function(script){
+  this.words = {};
+
+  var next = nextFn.bind(this);
+  if (localStorage['script-draft-'+this.name]) {
+    next(JSON.parse(localStorage['script-draft-'+this.name]));
+  } else {
+    $.get('/api/scripts/'+this.name).then(next);
+  }
+
+  function nextFn(script){
     Script.dataKeys.forEach(function(key){
       this[key] = script[key];
     }.bind(this));
 
     this.wordList = new WordList(this.name);
     if (success) success();
-  }.bind(this));
+  }
 };
 
 Script.prototype.saveDraft = function(){
-
+  var draft = {};
+  Script.dataKeys.forEach(function(key){
+    draft[key] = this[key];
+  }.bind(this));
+  localStorage['script-draft-'+this.name] = JSON.stringify(draft);
 };
