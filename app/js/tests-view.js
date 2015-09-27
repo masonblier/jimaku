@@ -148,7 +148,7 @@ TestsView.categories.push((function(){
 // render function
 TestsView.prototype.render = function($el){
   var $testsView = $('<div class="tests-view"></div>');
-  $el.appendChild($testsView[0]);
+  $el.append($testsView);
 
   $testsView.html('<h1>Tests</h1>');
 

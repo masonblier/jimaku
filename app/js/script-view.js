@@ -3,23 +3,21 @@ function ScriptView(scriptName){
 }
 
 ScriptView.prototype.render = function($el){
-  this.$el = $el;
+  var $scriptView = $('<div class="script-view"></div>');
+  $el.append($scriptView);
 
   var $spinner = $('<div style="text-align:center;margin-top:30px;">'+
       '<div class="loading-spinner"></div>'+
     '</div>');
-  $el.append($spinner);
+  $scriptView.append($spinner);
 
   this.$wordOverlayReading = $('<div class="script-word-overlay-reading" style="display:none;"></div>');
-  $el.append(this.$wordOverlayReading);
+  $scriptView.append(this.$wordOverlayReading);
   this.$wordOverlay = $('<div class="script-word-overlay" style="display:none;"></div>');
-  $el.append(this.$wordOverlay);
+  $scriptView.append(this.$wordOverlay);
 
-  var $scriptView = $('<div class="script-view"></div>');
-  $el.append($scriptView);
-
-  this.$measureNode = $('<div style="height:0;overflow:hidden;display:inline-block;"></div>');
-  $el.append(this.$measureNode);
+  this.$measureNode = $('<div class="script-measure-node"></div>');
+  $scriptView.append(this.$measureNode);
 
   this.script = new Script(this.scriptName);
   this.script.load(function(){
@@ -34,7 +32,7 @@ ScriptView.prototype.renderScript = function($el, cb){
 
   $el.css({height:'0',overflow:'hidden'});
 
-  $el.html('<h1>'+_this.script.title+'</h1>');
+  $el.append('<h1>'+_this.script.getDisplayName()+'</h1>');
   var $scriptLines = $('<div class="script-lines"><div>');
   $el.append($scriptLines);
 
@@ -137,7 +135,6 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
       $meaningSelect.html('');
 
       // meaning select options
-      var meaningOptions = ["Test"];
       (word.meanings||[]).forEach(function(meaningOption){
         if (meaningOption === wordMeaning) return;
         var $meaningSelectOption = $('<div class="script-word-meaning-select-option">'+meaningOption+'</div>');

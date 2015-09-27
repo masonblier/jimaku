@@ -35,12 +35,12 @@ EvToolView.prototype.render = function($el){
   EvToolView.prototype.renderRecentsView($openRecentView);
 
   var $scriptView = document.createElement('div');
-  $scriptView.className = 'script-view';
+  $scriptView.className = 'ev-script-view';
 
-  $el.innerHTML = '';
-  $el.appendChild($fileForm);
-  $el.appendChild($openRecentView);
-  $el.appendChild($scriptView);
+  $el[0].innerHTML = '';
+  $el[0].appendChild($fileForm);
+  $el[0].appendChild($openRecentView);
+  $el[0].appendChild($scriptView);
 };
 
 EvToolView.prototype.renderRecentsView = function($el){
@@ -54,7 +54,7 @@ EvToolView.prototype.renderRecentsView = function($el){
       e.preventDefault();
       this.filekey = filekey;
       this.load();
-      this.renderScriptView(document.querySelector('.script-view'));
+      this.renderScriptView(document.querySelector('.ev-script-view'));
     }.bind(this), false);
     return $link;
   }.bind(this);

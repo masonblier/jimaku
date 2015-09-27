@@ -22,6 +22,14 @@ App.router.on("/", function(){
   App.setCurrentView(new HomeView());
 });
 
+App.router.on("/scripts/:scriptName/edit", function(p){
+  App.setCurrentView(new ScriptView(p.params.scriptName));
+});
+
+App.router.on("/scripts/:scriptName", function(p){
+  App.setCurrentView(new ScriptView(p.params.scriptName));
+});
+
 App.router.on("/tests", function(){
   App.setCurrentView(new TestsView());
 });
@@ -35,11 +43,11 @@ App.setCurrentView = function(view){
   function _delayed(err){
     if (err) throw err;
     App.currentView = view;
-    var $app = document.getElementById("app");
-    $app.innerHTML = "";
+    var $app = $("#app");
+    $app.html('');
     view.render($app);
   }
-  if (App.currentView) {
+  if (App.currentView && App.currentView.detach) {
     if (App.currentView.detach.length > 0) {
       return App.currentView.detach(_delayed);
     } else {

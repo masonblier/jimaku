@@ -31,3 +31,9 @@ Script.prototype.saveDraft = function(){
   }.bind(this));
   localStorage['script-draft-'+this.name] = JSON.stringify(draft);
 };
+
+Script.prototype.getDisplayName = function(){
+  return this.name.replace(/\-(\d+)/gm, function(a, m){
+    return ' - '+m;
+  }).replace(/_/gm, ' ');
+};

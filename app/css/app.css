@@ -7,6 +7,8 @@ body {
   overflow-y: scroll;
 }
 
+/* header */
+
 #header {
   font-size: 2em;
   margin: 0 auto;
@@ -21,12 +23,27 @@ body {
   margin: 0 auto;
   text-decoration: none;
 }
+.header-link:visited {
+  color: #28967d;
+}
 .header-link>small {
   float:right;
   margin-top: 9px;
   font-size: 20px;
 }
 
+/* links */
+a {
+  color: #28967d;
+}
+a:hover, a:active, a:visited:hover {
+  color: #20c69d;
+}
+a:visited {
+  color: #2a94d6;
+}
+
+/* msc elements */
 .loading-spinner {
   display: inline-block;
   width: 34px;
@@ -49,6 +66,8 @@ body {
   border-left:5px solid transparent;
 }
 
+/* modal */
+
 #modal {
   position: fixed;
   top: 0; bottom: 0;
@@ -64,6 +83,8 @@ body {
   margin-top: 200px;
   border-radius: 4px;
 }
+
+/* forms */
 
 .form-group {
   margin: 7px;
@@ -91,4 +112,20 @@ button:hover {
   border: 1px solid #d05030;
   border-radius: 4px;
   margin: 2px 0;
+}
+
+/* tables */
+table {
+  width: 100%;
+  border: 1px solid #f0f0f0;
+}
+th {
+  text-align: left;
+  background: mintcream;
+}
+th, td {
+  padding: 2px 5px;
+}
+table > tbody > tr > td {
+  border-top: 1px solid #f0f0f0;
 }

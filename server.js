@@ -12,8 +12,6 @@ app.use(function (req,res,next){
 
 // static resources
 app.use(express.static('app'));
-// app.use('/css', express.static('app/css'));
-// app.use('/js', express.static('app/js'));
 
 // request parsers
 app.use(bodyParser.json({ type: 'application/json' }));
@@ -32,7 +30,6 @@ app.use(function(req,res,next){
   }
 });
 
-// Listen
 // listen
 var server = app.listen(8486, function () {
   var host = server.address().address;

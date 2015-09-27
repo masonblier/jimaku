@@ -14,10 +14,8 @@ var DATA_CACHE_PATH = path.join(__dirname, '../data/scripts_data');
 scripts.get('/scripts/:scriptName', function (req, res) {
 
   var scriptName = req.params['scriptName'].replace(/[^a-zA-Z0-9-_ ]/gm,"");
-  var scriptDir = scriptName.split(' - ')[0];
-  console.log(scriptDir+'/'+scriptName);
 
-  var scriptCachePath = path.join(DATA_CACHE_PATH, scriptDir, scriptName+'.json');
+  var scriptCachePath = path.join(DATA_CACHE_PATH, scriptName+'.json');
   if (fs.existsSync(scriptCachePath)) {
     fs.readFileAsync(scriptCachePath, {encoding:"utf8"}).done(function(scriptCacheRaw){
       var scriptData = JSON.parse(scriptCacheRaw);
@@ -26,7 +24,7 @@ scripts.get('/scripts/:scriptName', function (req, res) {
     return;
   }
 
-  var scriptPath = path.join(SCRIPTS_PATH, scriptDir, scriptName+'.txt');
+  var scriptPath = path.join(SCRIPTS_PATH, scriptName+'.txt');
   var raw = fs.readFileSync(scriptPath, {encoding:"utf8"});
 
   var script = {
@@ -55,11 +53,19 @@ scripts.get('/scripts/:scriptName', function (req, res) {
       script.lines = lines;
     });
   }).then(function(){
-    if (!fs.existsSync(path.join(DATA_CACHE_PATH, scriptDir))) {
-      fs.mkdirSync(path.join(DATA_CACHE_PATH, scriptDir));
+    if (!fs.existsSync(path.join(DATA_CACHE_PATH))) {
+      fs.mkdirSync(path.join(DATA_CACHE_PATH));
     }
     return fs.writeFileAsync(scriptCachePath, JSON.stringify(script), {encoding:"utf8"});
   }).done(function(){
     res.json(script);
+  });
+});
+
+scripts.get('/scripts', function(req, res){
+  fs.readdirAsync(SCRIPTS_PATH).done(function(scriptList){
+    res.json({list: scriptList.map(function(filename){
+      return filename.substr(0, filename.lastIndexOf('.'));
+    })});
   });
 });
