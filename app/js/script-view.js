@@ -32,7 +32,13 @@ ScriptView.prototype.renderScript = function($el, cb){
 
   $el.css({height:'0',overflow:'hidden'});
 
+  $el.append('<div class="script-tabs">'+
+      '<a href="/scripts/'+this.scriptName+'">Script</a>'+
+      '<a href="/scripts/'+this.scriptName+'/vocabulary">Vocabulary</a>'+
+    '</div>');
   $el.append('<h1>'+_this.script.getDisplayName()+'</h1>');
+
+
   var $scriptLines = $('<div class="script-lines"><div>');
   $el.append($scriptLines);
 

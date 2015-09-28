@@ -26,6 +26,10 @@ App.router.on("/scripts/:scriptName/edit", function(p){
   App.setCurrentView(new ScriptView(p.params.scriptName));
 });
 
+App.router.on("/scripts/:scriptName/vocabulary", function(p){
+  App.setCurrentView(new ScriptVocabularyView(p.params.scriptName));
+});
+
 App.router.on("/scripts/:scriptName", function(p){
   App.setCurrentView(new ScriptView(p.params.scriptName));
 });

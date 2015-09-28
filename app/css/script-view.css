@@ -3,6 +3,7 @@
   /*margin: 10px 20px;*/
   margin: 10px auto;
   width: 1000px;
+  overflow: hidden;
 }
 
 .script-view > h1 {
@@ -10,6 +11,14 @@
   font-size: 1.5em;
   font-weight: normal;
   border-bottom: 1px solid #ccc;
+}
+
+.script-tabs {
+  float: right;
+  padding: 18px 2px;
+}
+.script-tabs > a {
+  margin-left: 15px;
 }
 
 .script-line.highlighted {
@@ -43,6 +52,7 @@
 }
 
 .script-measure-node {
+  float: left;
   position: absolute;
   display: inline-block;
   height: 0;
@@ -51,6 +61,7 @@
 
 .script-word-overlay-reading,
 .script-word-overlay {
+  float: left;
   position: absolute;
   /*background: #378450;*/
   /*color: white;*/
@@ -188,6 +199,11 @@
   color: #00af81;
   font-size: 12px;
   padding: 3px;
+}
+
+/* vocabulary list */
+.script-view > table > tbody > tr:hover {
+  background: #ffffe0;
 }
 
 /* add word dialog */
