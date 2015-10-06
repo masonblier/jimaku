@@ -1,4 +1,4 @@
-var parser = require('./lib/parser.js');
+var parser = require('../lib/parser.js');
 var util = require('util');
 
 var tests = [];

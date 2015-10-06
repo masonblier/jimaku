@@ -11,10 +11,8 @@ ScriptView.prototype.render = function($el){
     '</div>');
   $scriptView.append($spinner);
 
-  this.$wordOverlayReading = $('<div class="script-word-overlay-reading" style="display:none;"></div>');
-  $scriptView.append(this.$wordOverlayReading);
-  this.$wordOverlay = $('<div class="script-word-overlay" style="display:none;"></div>');
-  $scriptView.append(this.$wordOverlay);
+  this.$wordOverlays = $('<div class="script-word-overlays"></div>');
+  $scriptView.append(this.$wordOverlays);
 
   this.$measureNode = $('<div class="script-measure-node"></div>');
   $scriptView.append(this.$measureNode);
@@ -65,7 +63,7 @@ ScriptView.prototype.renderScript = function($el, cb){
     $line.on('click', function(e){
       _this.setHighlightedLine($line);
       if (!_this.wordClicked) {
-        _this.hideWordOverlay();
+        _this.hideWordOverlays();
       }
       _this.wordClicked = false;
     });
@@ -123,21 +121,24 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
   var wordMeaning = word.meaning || "";
 
   // overlay htmls
-  this.$wordOverlayReading.html(wordReading.length > 0 ?
+  var $wordOverlayReading = $(wordReading.length > 0 ?
     '<div class="script-word-reading">'+wordReading+'</div>' : '');
-  this.$wordOverlay.html('<div class="script-word-info">'+
+  var $wordOverlayInfo = $('<div class="script-word-info">'+
       (wordMeaning.length > 0 ? '<div class="script-word-meaning">'+wordMeaning+'</div>' : '')+
       '<div class="script-word-meaning-select"></div>'+
     '</div>');
 
+  this.$wordOverlays.html('');
+  this.$wordOverlays.append($wordOverlayReading);
+  this.$wordOverlays.append($wordOverlayInfo);
+
   // word meanings dropdown
-  var $wordInfo = this.$wordOverlay.find(".script-word-info");
-  var $wordMeaning = this.$wordOverlay.find(".script-word-meaning");
+  var $wordMeaning = $wordOverlayInfo.find(".script-word-meaning");
   var $meaningSelect = null;
   $wordMeaning.on('click', function(){
     if (!$meaningSelect) {
-      $wordInfo.addClass("expanded");
-      $meaningSelect = this.$wordOverlay.find(".script-word-meaning-select");
+      $wordOverlayInfo.addClass("expanded");
+      $meaningSelect = $wordOverlayInfo.find(".script-word-meaning-select");
       $meaningSelect.html('');
 
       // meaning select options
@@ -149,7 +150,7 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
           this.script.saveDraft();
           $wordMeaning.html(meaningOption);
 
-          $wordInfo.removeClass("expanded");
+          $wordOverlayInfo.removeClass("expanded");
           $meaningSelect.html('');
           $meaningSelect = null;
         }.bind(this));
@@ -174,7 +175,7 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
         }.bind(this);
         editWordView.render();
 
-        this.hideWordOverlay();
+        this.hideWordOverlays();
       }.bind(this));
       $meaningSelect.append($meaningSelectOption);
 
@@ -187,17 +188,17 @@ ScriptView.prototype.showWordClickOverlay = function($word, word, $line, line){
 
   // positioning measurements
   var centerX = ($word.position().left + $word.width()/2);
-  var left = (centerX - 65);
+  var left = (centerX - 60);
   var top = ($word.position().top - 28);
   var width = 120;
 
-  this.$wordOverlayReading.css({
+  $wordOverlayReading.css({
     left: left+'px',
     top: top+'px',
     width: width+'px',
     display: 'block'
   });
-  this.$wordOverlay.css({
+  $wordOverlayInfo.css({
     left: left+'px',
     top: (top+52)+'px',
     width: width+'px',
@@ -269,9 +270,19 @@ ScriptView.prototype.handleSelection = function($line, line, sel){
       $line, $line,
       pos: pos
     };
-    this.showWordSelectOverlay();
-    var centerX = (startLeft + (endLeft - startLeft + 4)/2);
-    this.$wordOverlay.css({
+
+    var $wordOverlaySelect = $(
+      '<div class="script-word-select">'+
+        '<div class="script-word-select-btn"><div class="dropdown-arrow arrow-down"></div></div>'+
+        '<div class="script-word-select-word">'+this.sel.text+'</div>'+
+      '</div>');
+    $wordOverlaySelect.click(this.clickWordSelect.bind(this));
+
+    this.$wordOverlays.html('');
+    this.$wordOverlays.append($wordOverlaySelect);
+
+    var centerX = (startLeft + (endLeft - startLeft + 12)/2);
+    $wordOverlaySelect.css({
       left: (centerX - 60)+'px',
       top: (startTop + 24)+'px',
       width: 120+'px',
@@ -280,26 +291,14 @@ ScriptView.prototype.handleSelection = function($line, line, sel){
 
   } else {
     if (this.sel) {
-      this.hideWordOverlay();
+      this.hideWordOverlays();
       this.sel = null;
     }
   }
 };
 
-ScriptView.prototype.showWordSelectOverlay = function($line, line, selText){
-  this.$wordOverlayReading.hide();
-  this.$wordOverlay.html(
-    '<div class="script-word-select">'+
-      '<div class="script-word-select-btn"><div class="dropdown-arrow arrow-down"></div></div>'+
-      '<div class="script-word-select-word">'+this.sel.text+'</div>'+
-    '</div>');
-  this.$wordOverlay.find('.script-word-select').click(this.clickWordSelect.bind(this));
-};
-
-ScriptView.prototype.hideWordOverlay = function(){
-  // this.$wordOverlay.html('');
-  this.$wordOverlay.hide();
-  this.$wordOverlayReading.hide();
+ScriptView.prototype.hideWordOverlays = function(){
+  this.$wordOverlays.html('');
   this.$wordSelectList = null;
 };
 
@@ -328,7 +327,7 @@ ScriptView.prototype.clickWordSelect = function(e){
           var word = choice;
           this.replaceWordInSelection(word);
           this.script.saveDraft();
-          this.hideWordOverlay();
+          this.hideWordOverlays();
         }.bind(this));
         $wordSelectListChoices.append($choice);
       }.bind(this));
@@ -349,11 +348,12 @@ ScriptView.prototype.clickWordSelect = function(e){
       }.bind(this);
 
       editWordView.render();
-      this.hideWordOverlay();
+      this.hideWordOverlays();
     }.bind(this));
     this.$wordSelectList.append($choiceAdd);
 
-    this.$wordOverlay.append(this.$wordSelectList);
+    var $wordOverlaySelect = this.$wordOverlays.find(".script-word-select");
+    $wordOverlaySelect.append(this.$wordSelectList);
   }
   return false;
 };

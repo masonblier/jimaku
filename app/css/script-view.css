@@ -59,19 +59,20 @@
   overflow: hidden;
 }
 
-.script-word-overlay-reading,
-.script-word-overlay {
+.script-word-overlays {
   float: left;
   position: absolute;
-  /*background: #378450;*/
-  /*color: white;*/
   z-index: 20;
-  padding: 2px 5px;
-  text-align: center;
   width: 0;
 }
 
 /* word clicked overlay */
+.script-word-reading,
+.script-word-select,
+.script-word-info {
+  position: absolute;
+}
+
 .script-word-info {
   text-align: left;
   cursor: pointer;
